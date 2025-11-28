@@ -8,7 +8,7 @@ machine LoadPlatformDescription @platforms/boards/stm32f4_discovery-kit.repl
 
 cpu PerformanceInMips 125
 
-$bin?=@../agent/build/zephyr/zephyr.elf
+$bin?=@../agent/build_disco/zephyr/zephyr.elf
 
 # per vedere l'output a mano
 showAnalyzer sysbus.usart2

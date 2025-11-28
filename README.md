@@ -87,16 +87,15 @@ wamrc --target=thumbv7em --target-abi=gnu --cpu=cortex-m4 -o toggle_forever.aot 
     Build del firmware dell'agent per la scheda fisica NUCLEO-F446RE:
     ```
     cd firmware/agent
-    west build . -b nucleo_f446re --pristine
+    west build . -d build_nucleo -b nucleo_f446re --pristine
     ```
     Flash su NUCLEO‑F446RE:
     ```
-    west flash
+    west flash --build-dir build_nucleo
     ```
     Build del firmware per la scheda emulata STM32F4‑Discovery:
     ```
-    cd firmware/agent
-    west build . -b stm32f4_disco --pristine
+    west build . -d build_disco -b stm32f4_disco --pristine
     ```
     Avvio di Renode:
     ```

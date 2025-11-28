@@ -1,1 +1,0 @@
-"mcuboot":"C:/Users/Salvo/stm32-wasm-runtime-benchmarks/zephyrproject/bootloader/mcuboot":"C:/Users/Salvo/stm32-wasm-runtime-benchmarks/zephyrproject/bootloader/mcuboot/boot/zephyr/sysbuild"

@@ -1,2 +1,0 @@
-# Load Zephyr board Kconfig descriptions.
-osource "C:/Users/Salvo/stm32-wasm-runtime-benchmarks/zephyrproject/zephyr/boards/st/nucleo_f446re/Kconfig"

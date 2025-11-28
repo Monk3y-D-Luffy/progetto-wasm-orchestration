@@ -51,7 +51,7 @@ if (NOT DEFINED WAMR_BUILD_GLOBAL_HEAP_SIZE)
   set (WAMR_BUILD_GLOBAL_HEAP_SIZE 65536) # 64 KB
 endif ()
 
-set (WAMR_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../wasm-micro-runtime)
+set (WAMR_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../wasm-micro-runtime)
 
 include (${WAMR_ROOT_DIR}/build-scripts/runtime_lib.cmake)
 

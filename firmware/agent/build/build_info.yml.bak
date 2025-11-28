@@ -1,0 +1,5 @@
+west:
+  command: C:\Users\Salvo\stm32-wasm-runtime-benchmarks\zephyrproject\.venv\Scripts\west
+    build . -b nucleo_f446re --pristine
+  topdir: C:\Users\Salvo\stm32-wasm-runtime-benchmarks\zephyrproject
+  version: 1.5.0

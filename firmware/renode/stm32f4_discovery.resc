@@ -1,0 +1,28 @@
+:name: STM32F4 Discovery
+:description: This script runs Zephyr WAMR agent on STM32F4 Discovery (controlled by a Python orchestrator on the host)
+
+using sysbus
+$name?="STM32F4_Discovery"
+mach create $name
+machine LoadPlatformDescription @platforms/boards/stm32f4_discovery-kit.repl
+
+cpu PerformanceInMips 125
+
+$bin?=@../agent/build/zephyr/zephyr.elf
+
+# per vedere l'output a mano
+showAnalyzer sysbus.usart2
+sysbus LogPeripheralAccess gpioPortD true
+
+# per parlare via TCP con uno script host
+emulation CreateServerSocketTerminal 3456 "uart-term" false
+connector Connect sysbus.usart2 uart-term
+
+
+macro reset
+"""
+    sysbus LoadELF $bin
+"""
+
+runMacro $reset
+

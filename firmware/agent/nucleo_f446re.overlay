@@ -1,0 +1,26 @@
+/* Overlay per portare il SYSCLK a 180 MHz su Nucleo-F446RE */
+
+&pll {
+	/* HSE = 8 MHz
+	 * VCO = 8 / 8 * 360 = 360 MHz
+	 * SYSCLK = 360 / 2 = 180 MHz
+	 */
+	div-m = <8>;
+	mul-n = <360>;
+	div-p = <2>;
+	/* PLLQ lo puoi tenere a 7 o 8 in base a USB/SDIO, se non ti serve non importa troppo */
+	div-q = <7>;
+	clocks = <&clk_hse>;
+	status = "okay";
+};
+
+&rcc {
+	clocks = <&pll>;
+	/* HCLK = 180 MHz */
+	clock-frequency = <DT_FREQ_M(180)>;
+
+	/* APB1 max 45 MHz */
+	ahb-prescaler  = <1>;  /* 180 MHz */
+	apb1-prescaler = <4>;  /* 45 MHz */
+	apb2-prescaler = <2>;  /* 90 MHz */
+};

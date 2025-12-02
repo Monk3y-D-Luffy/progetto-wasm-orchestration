@@ -20,8 +20,8 @@ except ImportError:
 # Mappa device -> endpoint fisico/emulato
 
 DEVICE_ENDPOINTS = {
-    "nucleo": "COM3",              
-    "disco":  "tcp:localhost:3456", 
+    "nucleo": "COM3",                # UART on Windows
+    "disco":  "tcp:localhost:3456",  # TCP socket (Renode bridge)
 }
 
 
@@ -125,7 +125,7 @@ def open_transport(port: str) -> Transport:
         return Transport(sock=s)
     else:
         if serial is None:
-            raise RuntimeError("pyserial non installato")
+            raise RuntimeError("pyserial not installed")
         ser = serial.Serial(port, baudrate=115200, timeout=0.1)
         return Transport(ser=ser)
 
@@ -438,7 +438,7 @@ def run_gateway(listen_host: str, listen_port: int):
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind((listen_host, listen_port))
         s.listen(5)
-        print(f"Gateway in ascolto su {listen_host}:{listen_port}")
+        print(f"Gateway listening on {listen_host}:{listen_port}")
         while True:
             conn, addr = s.accept()
             t = threading.Thread(target=handle_client, args=(conn, addr),

@@ -62,19 +62,19 @@ static size_t   g_bin_received = 0;
 // semaforo per notificare al thread che il payload è completo
 K_SEM_DEFINE(bin_sem, 0, 1);
 
-// Stato modulo caricato (un modulo alla volta)
-static uint8_t           *g_wasm_buf      = NULL;
+// Stato modulo caricato
+static uint8_t           *g_wasm_buf      = NULL;  // Module binary
 static uint32_t           g_wasm_size     = 0;
-static wasm_module_t      g_wasm_module   = NULL;
-static wasm_module_inst_t g_wasm_inst     = NULL;
-static bool               g_module_loaded = false;
+static wasm_module_t      g_wasm_module   = NULL;  // Parsed module
+static wasm_module_inst_t g_wasm_inst     = NULL;  // Instance with memory
+static bool               g_module_loaded = false; 
 
 // Stato esecuzione RUNNER
 
 
 static run_request_t g_run_req;
-static volatile bool g_runner_busy     = false;
-static volatile bool g_stop_requested  = false;
+static volatile bool g_runner_busy     = false;  // Execution in progress
+static volatile bool g_stop_requested  = false;  // Stop signal
 
 // semaforo usato per svegliare il RUNNER quando c'è un nuovo job
 K_SEM_DEFINE(run_sem, 0, 1);

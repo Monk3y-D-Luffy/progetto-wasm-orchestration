@@ -73,7 +73,7 @@ def cmd_start(args):
         "result_timeout": float(args.result_timeout),
     }
     timeout = args.result_timeout + 5.0 if args.wait_result else 10.0
-
+    ...
     t0 = time.perf_counter()
     resp = send_request(args.gw_host, args.gw_port, payload, timeout=timeout)
     t1 = time.perf_counter()

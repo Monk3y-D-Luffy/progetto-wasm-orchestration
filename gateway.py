@@ -435,9 +435,9 @@ def handle_client(conn, addr):
 
 def run_gateway(listen_host: str, listen_port: int):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # Imposta l’opzione SO_REUSEADDR: permette di riusare rapidamente la stessa porta dopo un riavvio del processo, senza aspettare che il kernel liberi lo stato precedente
         s.bind((listen_host, listen_port))
-        s.listen(5)
+        s.listen(5)   # Manda la socket in stato “listening” e imposta la dimensione della coda pendente (qui 5 connessioni in attesa massimo)
         print(f"Gateway listening on {listen_host}:{listen_port}")
         while True:
             conn, addr = s.accept()

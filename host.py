@@ -7,7 +7,7 @@ import time
 
 
 def send_request(gw_host: str, gw_port: int, payload: dict, timeout: float = 5.0):
-    data = (json.dumps(payload) + "\n").encode("utf-8")
+    data = (json.dumps(payload) + "\n").encode("utf-8")     # trasforma il dizionario in stringa JSON, aggiunge un terminatore di riga e converte la stringa in bytes
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.settimeout(timeout)
         s.connect((gw_host, gw_port))
@@ -16,7 +16,7 @@ def send_request(gw_host: str, gw_port: int, payload: dict, timeout: float = 5.0
         buf = bytearray()
         while True:
             try:
-                chunk = s.recv(4096)
+                chunk = s.recv(4096)  #legge fino a 4096 byte dalla socket
                 if not chunk:
                     break
                 buf += chunk
@@ -28,7 +28,7 @@ def send_request(gw_host: str, gw_port: int, payload: dict, timeout: float = 5.0
         return None
 
     try:
-        resp = json.loads(buf.decode("utf-8"))
+        resp = json.loads(buf.decode("utf-8"))  # converte i bytes in stringa e prova a interpretare la stringa come JSON e a convertirla in oggetti Python (tipicamente un dict)
     except Exception as e:
         print("!! risposta non valida dal gateway:", e)
         print(buf.decode("utf-8", errors="ignore"))
@@ -73,7 +73,7 @@ def cmd_start(args):
         "result_timeout": float(args.result_timeout),
     }
     timeout = args.result_timeout + 5.0 if args.wait_result else 10.0
-    ...
+    
     t0 = time.perf_counter()
     resp = send_request(args.gw_host, args.gw_port, payload, timeout=timeout)
     t1 = time.perf_counter()

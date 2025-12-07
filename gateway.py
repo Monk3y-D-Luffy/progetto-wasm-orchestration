@@ -81,31 +81,36 @@ class Transport:
             b = None
             try:
                 if self.ser is not None:
-                    chunk = self.ser.read(1)
+                    # Lettura da UART: legge 1 byte, con timeout impostato nella Serial
+                    chunk = self.ser.read(1)   
                     if not chunk:
+                        # Nessun byte arrivato entro il timeout della seriale → riprova
                         continue
                     b = chunk
                 elif self.sock is not None:
-                    self.sock.settimeout(0.1)
-                    chunk = self.sock.recv(1)
+                    # Lettura da socket TCP: imposta un piccolo timeout per non bloccare troppo
+                    self.sock.settimeout(0.1)   
+                    chunk = self.sock.recv(1)   
                     if not chunk:
+                        # Il peer ha chiuso la connessione. Se non abbiamo ancora nessun byte in buf, consideriamo che non sia arrivata nessuna riga.
                         if not buf:
                             return None
+                        # Se invece avevamo già qualcosa, usiamo quello come riga parziale.
                         break
                     b = chunk
             except socket.timeout:
                 continue
 
-            if b is None:
-                continue
-
+            
             buf += b
             if b == b"\n":
+                # Newline ricevuto: fine della riga
                 break
 
         if not buf:
             return None
-
+        
+        # Decodifica la riga come ASCII, ignorando eventuali caratteri non validi e rimuove \r\n finali
         line = buf.decode("ascii", errors="ignore").rstrip("\r\n")
         print("<<", line)
         return line
@@ -162,7 +167,7 @@ def compile_to_wasm(source_c: str, out_wasm: str):
         "-o",
         out_wasm,
     ]
-    print("Compilo C -> WASM:", " ".join(cmd))
+    print("Compilo C -> WASM:", " ".join(cmd))  # Stampa il comando completo per debug
     res = subprocess.run(cmd, capture_output=True, text=True)
     if res.returncode != 0:
         return {
@@ -206,9 +211,9 @@ def gw_deploy(device_port: str, module_id: str, wasm_or_aot_path: str):
     with open(wasm_or_aot_path, "rb") as f:
         data = f.read()
 
-    size = len(data)
-    crc32 = binascii.crc32(data) & 0xFFFFFFFF
-    crc_hex = f"{crc32:08x}"
+    size = len(data)   # numero di byte del modulo
+    crc32 = binascii.crc32(data) & 0xFFFFFFFF  # checksum calcolato sui dati
+    crc_hex = f"{crc32:08x}"   #  rappresentazione esadecimale a 8 cifre, da mettere nella riga LOAD
 
     t = open_transport(device_port)
     try:
@@ -299,6 +304,7 @@ def gw_stop(device_port: str, module_id: str, result_timeout: float):
                     "error": "timeout in attesa di STOP_OK/RESULT/ERROR"}
 
         if resp.startswith("RESULT") or resp.startswith("ERROR"):
+            # l’agent può rispondere subito con un RESULT finale (funzione già terminata) o con un ERROR; in quel caso non serve altro, rimanda direttamente la risposta all’host
             return {"ok": True, "detail": resp}
 
         if "status=PENDING" not in resp:
